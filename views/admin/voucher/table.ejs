@@ -1,0 +1,54 @@
+<table id="example1" class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Nama</th>
+      <th>Category</th>
+      <th>Nominal</th>
+      <th>Status</th>
+      <th>Acction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (let i = 0; i < voucher.length; i++) { %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <td><%= voucher[i].name %></td>
+      <td><%= voucher[i]?.category?.name ?? '-' %></td>
+      <td>
+        <% voucher[i].nominals.forEach(nominal => {  %>
+        <span class="badge badge-info">
+          <%= nominal.coinName %> <%= nominal.coinQuantity %>
+        </span>
+        <% }) %>
+      </td>
+      <td>
+        <% if(voucher[i].status === 'Y') { %>
+        <span class="badge badge-info">
+          Active
+        </span>
+        <% } else { %>
+        <span class="badge badge-danger">
+          no Active
+        </span>
+        <% }  %>
+
+      </td>
+      <td>
+        <form action="/category/del/<%= voucher[i]._id %>?_method=DELETE" method="post">
+          <a href="/category/edit/<%= voucher[i]._id %>" class="btn btn-warning btn-sm"> <i class="fa fa-pencil-alt"></i></a>
+          <button class="btn btn-primary btn-sm">
+            <% if(voucher[i].status === 'Y') { %>
+            Matikan
+            <% } else { %>
+            Hidupkan
+            <% }  %>
+          </button>
+
+          <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+        </form>
+      </td>
+    </tr>
+    <% } %>
+    </tfoot>
+</table>
