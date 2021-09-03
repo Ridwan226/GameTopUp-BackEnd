@@ -100,51 +100,135 @@ module.exports = {
     }
   },
 
-  // viewEdit: async (req, res) => {
-  //   try {
-  //     const {id} = req.params;
-  //     const nominal = await Nominal.findOne({_id: id});
-  //     res.render("admin/nominal/edit", {nominal});
-  //   } catch (err) {
-  //     console.log(err);
-  //     req.flash("alertMessage", `${err.message}`);
-  //     req.flash("alertStatus", "danger");
-  //     res.redirect("/nominal");
-  //   }
-  // },
+  viewEdit: async (req, res) => {
+    try {
+      const {id} = req.params;
+      const voucher = await Voucher.findOne({_id: id})
+        .populate("category")
+        .populate("nominals");
+      const category = await Category.find();
+      const nominal = await Nominal.find();
+      res.render("admin/voucher/edit", {category, nominal, voucher});
+    } catch (err) {
+      console.log(err);
+      req.flash("alertMessage", `${err.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/voucher");
+    }
+  },
 
-  // acctionUpdate: async (req, res) => {
-  //   try {
-  //     const {id} = req.params;
-  //     const {coinName, coinQuantity, price} = req.body;
-  //     await Nominal.findOneAndUpdate(
-  //       {_id: id},
-  //       {coinName, coinQuantity, price},
-  //     );
-  //     req.flash("alertMessage", "Berhasil Ubah Nominal");
-  //     req.flash("alertStatus", "success");
-  //     // console.log(id);
-  //     res.redirect("/nominal");
-  //   } catch (err) {
-  //     console.log(err);
-  //     req.flash("alertMessage", `${err.message}`);
-  //     req.flash("alertStatus", "danger");
-  //     res.redirect("/nominal");
-  //   }
-  // },
+  acctionUpdate: async (req, res) => {
+    try {
+      const {id} = req.params;
+      const {category, nominals, name} = req.body;
 
-  // acctionDel: async (req, res) => {
-  //   try {
-  //     const {id} = req.params;
-  //     await Nominal.findOneAndRemove({_id: id});
-  //     req.flash("alertMessage", "Berhasil Hapus Nominal");
-  //     req.flash("alertStatus", "success");
-  //     res.redirect("/nominal");
-  //   } catch (err) {
-  //     console.log(err);
-  //     req.flash("alertMessage", `${err.message}`);
-  //     req.flash("alertStatus", "danger");
-  //     res.redirect("/nominal");
-  //   }
-  // },
+      if (req.file) {
+        let tmp_path = req.file.path;
+        let originalExt =
+          req.file.originalname.split(".")[
+            req.file.originalname.split(".").length - 1
+          ];
+        let filename = req.file.filename + "." + originalExt;
+        let target_path = path.resolve(
+          config.rootPath,
+          `public/uploads/${filename}`,
+        );
+
+        const src = fs.createReadStream(tmp_path);
+        const desh = fs.createWriteStream(target_path);
+
+        src.pipe(desh);
+        src.on("end", async () => {
+          try {
+            const voucher = await Voucher.findOne({_id: id});
+
+            let curentImage = `${config.rootPath}/public/uploads/${voucher.thumbnail}`;
+
+            if (fs.existsSync(curentImage)) {
+              fs.unlinkSync(curentImage);
+            }
+
+            await Voucher.findOneAndUpdate(
+              {_id: id},
+              {
+                category,
+                nominals,
+                name,
+                thumbnail: filename,
+              },
+            );
+
+            await voucher.save();
+            req.flash("alertMessage", "Berhasil Ubah Voucher");
+            req.flash("alertStatus", "success");
+            res.redirect("/voucher");
+          } catch (err) {
+            console.log(err);
+            req.flash("alertMessage", `${err.message}`);
+            req.flash("alertStatus", "danger");
+            res.redirect("/voucher");
+          }
+        });
+      } else {
+        await Voucher.findOneAndUpdate(
+          {_id: id},
+          {
+            category,
+            nominals,
+            name,
+          },
+        );
+        req.flash("alertMessage", "Berhasil Ubah Voucher");
+        req.flash("alertStatus", "success");
+        res.redirect("/voucher");
+      }
+    } catch (err) {
+      console.log(err);
+      req.flash("alertMessage", `${err.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/voucher");
+    }
+  },
+
+  acctionDel: async (req, res) => {
+    try {
+      const {id} = req.params;
+
+      const voucher = await Voucher.findOne({_id: id});
+
+      let curentImage = `${config.rootPath}/public/uploads/${voucher.thumbnail}`;
+
+      if (fs.existsSync(curentImage)) {
+        fs.unlinkSync(curentImage);
+      }
+
+      await Voucher.findOneAndRemove({_id: id});
+
+      req.flash("alertMessage", "Berhasil Hapus Status");
+      req.flash("alertStatus", "success");
+      res.redirect("/voucher");
+    } catch (err) {
+      console.log(err);
+      req.flash("alertMessage", `${err.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/voucher");
+    }
+  },
+
+  acctionStatus: async (req, res) => {
+    try {
+      const {id} = req.params;
+      const voucher = await Voucher.findOne({_id: id});
+      let status = voucher.status === "Y" ? "N" : "Y";
+
+      await Voucher.findOneAndUpdate({_id: id}, {status: status});
+      req.flash("alertMessage", "Berhasil Ubah Status");
+      req.flash("alertStatus", "success");
+      res.redirect("/voucher");
+    } catch (err) {
+      req.flash("alertMessage", `${err.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/voucher");
+    }
+  },
 };

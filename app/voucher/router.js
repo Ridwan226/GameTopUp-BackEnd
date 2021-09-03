@@ -7,9 +7,10 @@ const {
   index,
   viewCreate,
   actionCreate,
-  // viewEdit,
-  // acctionUpdate,
-  // acctionDel,
+  viewEdit,
+  acctionUpdate,
+  acctionDel,
+  acctionStatus,
 } = require("./controller");
 
 /* GET home page. */
@@ -20,8 +21,13 @@ router.post(
   multer({dest: os.tmpdir()}).single("image"),
   actionCreate,
 );
-// router.get("/edit/:id", viewEdit);
-// router.put("/update/:id", acctionUpdate);
-// router.delete("/del/:id", acctionDel);
+router.get("/edit/:id", viewEdit);
+router.put(
+  "/update/:id",
+  multer({dest: os.tmpdir()}).single("image"),
+  acctionUpdate,
+);
+router.delete("/del/:id", acctionDel);
+router.put("/status/:id", acctionStatus);
 
 module.exports = router;
