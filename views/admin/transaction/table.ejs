@@ -1,0 +1,63 @@
+<table id="example1" class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Item</th>
+      <th>Total Harga</th>
+      <th>Status</th>
+      <th>Name Player</th>
+      <th>Acction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (let i = 0; i < transaction.length; i++) { %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <td>
+        <ul class="list-inline" >
+          <li class="list-inline-item">
+            <img width="48px" height="48px"src="http://localhost:3000/uploads/images/<%= transaction[i]?.historyVoucherTopup?.thumbnail %>" alt="">
+          </li>
+          <li>
+            <%= transaction[i].historyVoucherTopup.gameName %> <br>
+            <%= transaction[i].historyVoucherTopup.category %>
+          </li>
+        </ul>
+      </td>
+      <td><%= transaction[i].historyVoucherTopup.gameName %></td>
+      
+      <td>
+       <%= transaction[i]?.value %>
+      </td>
+      <td>
+        <% if(transaction[i].status === 'pending') { %>
+        <span class="badge badge-info">
+          pending
+        </span>
+        <% } else if(transaction[i].status === 'success') { %>
+        <span class="badge badge-primary">
+         success
+        </span>
+        <% } else { %>
+          <span class="badge badge-danger">
+         Gagal
+        </span>
+        <% }  %>
+
+      </td>
+      <td>
+        <form action="/transaction/status/<%= transaction[i]._id %>?status=failed&_method=PUT" method="post" style="display: inline-block;">
+          <button class="btn btn-primary btn-sm bg-danger">
+            Tolak
+          </button>
+        </form>
+        <form action="/transaction/status/<%= transaction[i]._id %>?status=success&_method=PUT" method="post" style="display: inline-block;">
+          <button class="btn btn-primary btn-sm bg-info">
+            Terima
+          </button>
+        </form>
+      </td>
+    </tr>
+    <% } %>
+    </tfoot>
+</table>

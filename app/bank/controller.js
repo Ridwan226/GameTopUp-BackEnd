@@ -31,12 +31,12 @@ module.exports = {
 
   actionCreate: async (req, res) => {
     try {
-      const {name, nameBank, noRekening} = req.body;
+      const {name, bankName, noRekening} = req.body;
 
       req.flash("alertMessage", "Berhasil Tambah Bank");
       req.flash("alertStatus", "success");
 
-      let bank = await Bank({name, nameBank, noRekening});
+      let bank = await Bank({name, bankName, noRekening});
       await bank.save();
       res.redirect("/bank");
     } catch (err) {
@@ -63,8 +63,8 @@ module.exports = {
   acctionUpdate: async (req, res) => {
     try {
       const {id} = req.params;
-      const {name, nameBank, noRekening} = req.body;
-      await Bank.findOneAndUpdate({_id: id}, {name, nameBank, noRekening});
+      const {name, bankName, noRekening} = req.body;
+      await Bank.findOneAndUpdate({_id: id}, {name, bankName, noRekening});
       req.flash("alertMessage", "Berhasil Ubah Nominal");
       req.flash("alertStatus", "success");
       // console.log(id);
