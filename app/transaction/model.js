@@ -38,7 +38,7 @@ let transactionSchema = mongoose.Schema(
       enum: ["pending", "success", "failed"],
       default: "pending",
     },
-    player: {type: mongoose.Schema.Types.ObjectId, ref: "Players"},
+    player: {type: mongoose.Schema.Types.ObjectId, ref: "Player"},
     historyUser: {
       name: {type: String, require: [true, "name User Harus Di Isi"]},
       phoneNumber: {

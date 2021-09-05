@@ -4,6 +4,7 @@
       <th>No</th>
       <th>Item</th>
       <th>Total Harga</th>
+      <th>Value</th>
       <th>Status</th>
       <th>Name Player</th>
       <th>Acction</th>
@@ -44,6 +45,9 @@
         </span>
         <% }  %>
 
+      </td>
+      <td>
+         <%= transaction[i]?.player.name %>
       </td>
       <td>
         <form action="/transaction/status/<%= transaction[i]._id %>?status=failed&_method=PUT" method="post" style="display: inline-block;">
