@@ -1,0 +1,27 @@
+<table id="example1" class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>nama</th>
+      <th>Name Bank</th>
+      <th>No Rekening</th>
+      <th>Acction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for (let i = 0; i < bank.length; i++) { %>
+    <tr>
+      <td><%= i + 1 %></td>
+      <td><%= bank[i].name %></td>
+      <td><%= bank[i].nameBank %></td>
+      <td><%= bank[i].noRekening %></td>
+      <td>
+        <form action="/bank/del/<%= bank[i]._id %>?_method=DELETE" method="post" >
+          <a href="/bank/edit/<%= bank[i]._id %>" class="btn btn-warning btn-sm"> <i class="fa fa-pencil-alt"></i></a>
+          <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+        </form>
+      </td>
+    </tr>
+    <% } %>
+    </tfoot>
+</table>
