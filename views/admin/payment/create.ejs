@@ -1,0 +1,76 @@
+<%- include ../../partial/header.ejs %>
+<%- include ../../partial/navbar.ejs %>
+<%- include ../../partial/sidebar.ejs %>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Payment</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/payment">Payment</a></li>
+            <li class="breadcrumb-item active">Add</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3>Form Payment</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <form action="/payment/create" method="post">
+                <div class="card-body">
+                    <div class="form-group">
+                    <label>Pilih Bank</label>
+                    <div class="select2-purple">
+                      <select class="form-control select2" multiple="multiple" name="banks" required
+                        style="width: 100%;">
+                        <option>Pilih Nominal</option>
+                        <% bank.forEach(bank=> { %>
+                        <option value="<%= bank._id %>"><%= bank.nameBank %> </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                
+                  <div class="form-group">
+                    <label for="Price Koin">Type</label>
+                    <input type="text" name="type" class="form-control" placeholder="Enter Type">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+                <!-- /.card-body -->
+              </form>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+<%- include ../../partial/footer.ejs %>
+<%- include ../../partial/js.ejs %>
