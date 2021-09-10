@@ -17,7 +17,7 @@ let transactionSchema = mongoose.Schema(
     historyPayment: {
       name: {type: String, require: [true, "name Payment Harus Di Isi"]},
       type: {type: String, require: [true, "type Payment Harus Di Isi"]},
-      nameBank: {
+      bankName: {
         type: String,
         require: [true, "nameBank Payment Harus Di Isi"],
       },
