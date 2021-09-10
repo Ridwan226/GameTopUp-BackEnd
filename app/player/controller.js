@@ -118,4 +118,59 @@ module.exports = {
         .json({message: err.message || `Terjadi kesalahan pada server`});
     }
   },
+
+  history: async (req, res) => {
+    try {
+      const {status = ""} = req.query;
+
+      let criteria = {};
+
+      if (status.length) {
+        criteria = {
+          ...criteria,
+          status: {$regex: `${status}`, $options: "i"},
+        };
+      }
+
+      if (req.player._id) {
+        criteria = {
+          ...criteria,
+          player: req.player._id,
+        };
+      }
+
+      const history = await Transaction.find(criteria);
+
+      let total = await Transaction.aggregate([
+        {$match: criteria},
+        {$group: {_id: null, value: {$sum: "$value"}}},
+      ]);
+
+      res
+        .status(200)
+        .json({data: history, total: total.length ? total[0].value : 0});
+    } catch (err) {
+      res
+        .status(500)
+        .json({message: err.message || `Terjadi kesalahan pada server`});
+    }
+  },
+
+  historyDetail: async (req, res) => {
+    try {
+      const {id} = req.params;
+
+      const history = await Transaction.findOne({_id: id});
+
+      if (!history) {
+        return res.status(404).json({message: `history Game Tidak di Temukan`});
+      }
+
+      res.status(200).json({data: history});
+    } catch (err) {
+      res
+        .status(500)
+        .json({message: err.message || `Terjadi kesalahan pada server`});
+    }
+  },
 };
